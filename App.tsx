@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import WardrobeCanvas from './components/WardrobeCanvas';
 import LoginModal from './components/LoginModal';
 import LogoutModal from './components/LogoutModal';
+import DeveloperModal from './components/DeveloperModal';
 import { WardrobeItem } from './types';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
@@ -16,6 +17,7 @@ const App: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false); // Track if hydration is complete
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [isDevModalOpen, setIsDevModalOpen] = useState(false);
 
   // Theme Management
   const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -175,6 +177,17 @@ const App: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setIsDevModalOpen(true)}
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors border border-gray-200 dark:border-neutral-700 cursor-pointer"
+              title="Sole Developer: Nikhil Siddartha"
+            >
+              <img
+                src="/developer.jpg"
+                alt="Nikhil Siddartha"
+                className="w-6 h-6 rounded-full object-cover border border-indigo-500/50"
+              />
+            </button>
+            <button
               onClick={user ? handleLogout : () => setIsLoginOpen(true)}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors text-gray-500 dark:text-gray-400 cursor-pointer"
               title={user ? "Logout" : "Login"}
@@ -207,6 +220,20 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsDevModalOpen(true)}
+                className="flex items-center gap-2 p-1.5 pr-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors border border-gray-200 dark:border-neutral-700 cursor-pointer"
+                title="Sole Developer: Nikhil Siddartha"
+              >
+                <img
+                  src="/developer.jpg"
+                  alt="Nikhil Siddartha"
+                  className="w-7 h-7 rounded-full object-cover border border-indigo-500/50"
+                />
+                <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 hidden lg:inline">
+                  Developer
+                </span>
+              </button>
               <button
                 onClick={user ? handleLogout : () => setIsLoginOpen(true)}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors text-gray-500 dark:text-gray-400 cursor-pointer"
@@ -282,6 +309,10 @@ const App: React.FC = () => {
         isOpen={isLogoutOpen}
         onClose={() => setIsLogoutOpen(false)}
         onConfirm={confirmLogout}
+      />
+      <DeveloperModal
+        isOpen={isDevModalOpen}
+        onClose={() => setIsDevModalOpen(false)}
       />
     </GoogleOAuthProvider>
   );

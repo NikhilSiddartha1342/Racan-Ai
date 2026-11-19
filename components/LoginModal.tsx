@@ -115,6 +115,24 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
                     By clicking "Continue with Google", you acknowledge that you have read and understood, and agree to LookBook's Terms & Conditions and Privacy Policy.
                 </p>
 
+                {/* Bottom Branding (Outside Modal) */}
+                <div className="flex items-center justify-between w-full mt-4 pt-3 border-t border-gray-100 text-left">
+                    <div className="flex items-center gap-2.5">
+                        <img
+                            src="/developer.jpg"
+                            alt="Nikhil Siddartha"
+                            className="w-8 h-8 rounded-full object-cover border border-indigo-400"
+                        />
+                        <div>
+                            <div className="text-[11px] font-semibold text-neutral-800">Nikhil Siddartha</div>
+                            <div className="text-[10px] text-gray-400 font-mono">Sole Developer & Creator</div>
+                        </div>
+                    </div>
+                    <span className="text-[10px] font-mono uppercase bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded-full">
+                        Racan AI+
+                    </span>
+                </div>
+
             </div>
 
             {/* Bottom Branding (Outside Modal) */}
