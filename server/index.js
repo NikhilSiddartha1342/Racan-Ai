@@ -159,13 +159,15 @@ app.post('/api/auth/google', async (req, res) => {
     }
 });
 
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, '../dist')));
+// Serve static files from the React frontend app only when not running on Vercel
+if (!process.env.VERCEL) {
+    app.use(express.static(path.join(__dirname, '../dist')));
 
-// Anything that doesn't match the above, send back index.html
-app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
+    // Anything that doesn't match the above, send back index.html
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, '../dist/index.html'));
+    });
+}
 
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     app.listen(PORT, () => {

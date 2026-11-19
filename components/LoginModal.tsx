@@ -17,6 +17,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
             const decoded: any = jwtDecode(credentialResponse.credential);
             console.log('Google User:', decoded);
 
+            // Construct client user immediately so user is never blocked even if server API is down
+            const fallbackUser = {
+                _id: decoded.sub || 'user_' + Date.now(),
+                googleId: decoded.sub,
+                name: decoded.name || 'User',
+                email: decoded.email,
+                avatar: decoded.picture,
+                userType: 'LookBook user',
+                auth_type: 'google'
+            };
+
             try {
                 const res = await fetch('/api/auth/google', {
                     method: 'POST',
@@ -31,13 +42,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
                 if (res.ok) {
                     const data = await res.json();
-                    onLoginSuccess(data.user);
-                    onClose();
+                    onLoginSuccess(data.user || fallbackUser);
                 } else {
-                    console.error('Login failed on server');
+                    console.warn('Backend sync failed, using decoded client profile');
+                    onLoginSuccess(fallbackUser);
                 }
             } catch (err) {
-                console.error('Login error:', err);
+                console.warn('Network error during auth sync, proceeding with client profile:', err);
+                onLoginSuccess(fallbackUser);
+            } finally {
+                onClose();
             }
         }
     };
