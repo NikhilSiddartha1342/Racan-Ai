@@ -21,12 +21,25 @@ app.use((req, res, next) => {
     next();
 });
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => {
-        // console.log('MongoDB Connected'); // Log removed as requested
-    })
-    .catch(err => console.error('MongoDB Connection Error:', err));
+let isConnected = false;
+const connectDB = async () => {
+    if (isConnected || mongoose.connection.readyState >= 1) return;
+    try {
+        if (!process.env.MONGODB_URI) {
+            console.warn('MONGODB_URI not provided.');
+            return;
+        }
+        await mongoose.connect(process.env.MONGODB_URI);
+        isConnected = true;
+    } catch (err) {
+        console.error('MongoDB Connection Error:', err);
+    }
+};
+
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
 
 // Routes
 
@@ -154,6 +167,10 @@ app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
